@@ -3,20 +3,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import os
 import discord, time, requests, asyncio, random, json, colorama
 import re
@@ -64,29 +50,37 @@ owochannel = 0
 banner = """
 
               _                               _                 _           ____                
-     /\      | |                             | |     /\        | |         / __ \               
-    /  \   __| |_   ____ _ _ __   ___ ___  __| |    /  \  _   _| |_ ___   | |  | |_      _____  
-   / /\ \ / _` \ \ / / _` | '_ \ / __/ _ \/ _` |   / /\ \| | | | __/ _ \  | |  | \ \ /\ / / _ \ 
-  / ____ \ (_| |\ V / (_| | | | | (_|  __/ (_| |  / ____ \ |_| | || (_) | | |__| |\ V  V / (_) |
- /_/    \_\__,_| \_/ \__,_|_| |_|\___\___|\__,_| /_/    \_\__,_|\__\___/   \____/  \_/\_/ \___/ 
-                   ____                _______ _                                                
-                  |  _ \           ___|__   __| |            /\                                 
-                  | |_) |_   _    / __ \ | |  | |__   ___   /  \   __  _____  ___               
-                  |  _ <| | | |  / / _` || |  | '_ \ / _ \ / /\ \  \ \/ / _ \/ __|              
-                  | |_) | |_| | | | (_| || |  | | | |  __// ____ \  >  <  __/\__ \              
-                  |____/ \__, |  \ \__,_||_|  |_| |_|\___/_/    \_\/_/\_\___||___/              
-                          __/ |   \____/                                                        
-                         |___/                                                                  
+     /\\      | |                             | |     /\\        | |         / __ \\               
+    /  \\   __| |_   ____ _ _ __   ___ ___  __| |    /  \\  _   _| |_ ___   | |  | |_      _____  
+   / /\\ \\ / _` \\ \\ / / _` | '_ \\ / __/ _ \\/ _` |   / /\\ \\| | | | __/ _ \\  | |  | \\ \\ /\\ / / _ \\ 
+  / ____ \\ (_| |\\ V / (_| | | | | (_|  __/ (_| |  / ____ \\ |_| | || (_) | | |__| |\\ V  V / (_) |
+ /_/    \\_\\__,_| \\_/ \\__,_|_| |_|\\___\\___||__,_| /_/    \\_\\__,_|\\__\\___/   \\____/  \\_/\\_/ \\___/ 
+                    ____                _______ _                                                
+                   |  _ \\           ___|__   __| |            /\\                                 
+                   | |_) |_   _    / __ \\ | |  | |__   ___   /  \\   __  _____  ___               
+                   |  _ <| | | |  / / _` || |  | '_ \\ / _ \\ / /\\ \\  \\ \\/ / _ \\/ __|              
+                   | |_) | |_| | | | (_| || |  | | | |  __// ____ \\  >  <  __/\\__ \\              
+                   |____/ \\__, |  \\ \\__,_||_|  |_| |_|\\___/_/    \\_\\/_/\\_\\___||___/              
+                           __/ |   \\____/                                                        
+                          |___/                                                                  
 
 """
 user_data = requests.get("https://discord.com/api/v9/users/@me", headers={"Authorization": token}).json()
-globalname = user_data["global_name"]
+globalname = user_data.get("global_name")
 if not globalname:
     print(f"{Fore.RED}[Error] Incorrect Token Provided{Fore.RESET}")
     os.system('exit')
 
 all_tasks = []
 all_tasks_stop = []
+
+# New variables for spam farming
+farming_active = False
+farming_task = None
+user_token = None
+target_channel = None
+message_to_send = "owo h\nowo b"
+interval = 25
 
 
 def create_tasks():
@@ -212,7 +206,7 @@ def sendhook(hook_url, content, description, image_url):
                 },
                 "footer": {
                     "text": "Made By @Theaxes",
-                    "icon_url": "https://images-ext-1.discordapp.net/external/LEdJvbRy1zsqteshdxeKJ9sk5GCksjlNwiEO5_bCYhk/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/824522317899235360/2cbb4933cb3c03a205f4ed85167a8530.png?format=webp&quality=lossless&width=291&height=291",  # Replace with your footer icon URL
+                    "icon_url": "https://images-ext-1.discordapp.net/external/LEdJvbRy1zsqteshdxeKJ9sk5GCksjlNwiEO5_bCYhk/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/824522317899235360/2cbb49[...]
                 },
             }
         ],
@@ -249,9 +243,9 @@ async def on_connect():
             buttons=["TheAxes", "Made Only For You ❤️"],
             metadata=["https://youtube.com/@theaxes", "https://youtube.com/@theaxes"],
             assets=
-    {"large_image": "https://media.discordapp.net/attachments/1336378795665657958/1341091056351051776/2cbb4933cb3c03a205f4ed85167a8530.png?ex=67b4bbe0&is=67b36a60&hm=b47625464d95638d8b40be15d6502b719117506a051ea329dbc724208efb9580&=&format=webp&quality=lossless&width=291&height=291",
+    {"large_image": "https://media.discordapp.net/attachments/1336378795665657958/1341091056351051776/2cbb4933cb3c03a205f4ed85167a8530.png?ex=67b4bbe0&is=67b36a60&hm=b47625464d95638d8b40be15d6502[...]
     "large_text": "axesarecool",
-    "small_image": "https://media.discordapp.net/attachments/1115605458602971157/1341089828187668572/1a449430e3a9a830efebb8c57917f943.png?ex=67b4babb&is=67b3693b&hm=d8cf73451fc368c56439986d608a33e382f1090d02d3d41bd56627490ca0b435&=&format=webp&quality=lossless&width=530&height=530",
+    "small_image": "https://media.discordapp.net/attachments/1115605458602971157/1341089828187668572/1a449430e3a9a830efebb8c57917f943.png?ex=67b4babb&is=67b3693b&hm=d8cf73451fc369c56439986d608a33[...]
     "small_text": "uwuuwu"
         }), 
     )
@@ -280,7 +274,7 @@ async def on_message(message):
                             captcha = "https://owobot.com/captcha"
                         sendhook(hook_url=captcha_hook_url,
                         content=f"@everyone Captcha Alert!",
-                        description=f"A Captcha Has Been Detected!\n*Captcha Message*: [Jump to Message]({captchamsg})", image_url="https://images-ext-1.discordapp.net/external/mflqo1HcoLk6g1HEXdHLOBbKSVZ8Lq690mXrNA3yeX4/https/repository-images.githubusercontent.com/520888256/df57c468-cb50-4f1e-bb10-be6d7341b262?format=webp&width=797&height=448")
+                        description=f"A Captcha Has Been Detected!\n*Captcha Message*: [Jump to Message]({captchamsg})", image_url="https://images-ext-1.discordapp.net/external/mflqo1HcoLk6g1HEXd[...]
                         
                         if "letter word" in message.content:
                             solution = solvecap(
@@ -306,23 +300,23 @@ async def on_message(message):
                                         ), timeout=240)
                                     if "I have verified" in verification_message.content:
                                         channel = client.get_channel(owochannel)
-                                        sendhook(hook_url=captcha_hook_url, content=f"@everyone Captcha Alert!", description=f"Captcha Has Been Solved!", image_url="https://images-ext-1.discordapp.net/external/mflqo1HcoLk6g1HEXdHLOBbKSVZ8Lq690mXrNA3yeX4/https/repository-images.githubusercontent.com/520888256/df57c468-cb50-4f1e-bb10-be6d7341b262?format=webp&width=797&height=448")
+                                        sendhook(hook_url=captcha_hook_url, content=f"@everyone Captcha Alert!", description=f"Captcha Has Been Solved!", image_url="https://images-ext-1.discordap[...]
                                         await channel.send(f"{prefix}autoowo")
                                     else:
-                                        sendhook(hook_url=captcha_hook_url, image_url="https://images-ext-1.discordapp.net/external/mflqo1HcoLk6g1HEXdHLOBbKSVZ8Lq690mXrNA3yeX4/https/repository-images.githubusercontent.com/520888256/df57c468-cb50-4f1e-bb10-be6d7341b262?format=webp&width=797&height=448" ,content=f"@everyone Captcha Alert!", description=f"A Captcha Cant Be Solved, Bot Has Been Stopped!")
+                                        sendhook(hook_url=captcha_hook_url, image_url="https://images-ext-1.discordapp.net/external/mflqo1HcoLk6g1HEXdHLOBbKSVZ8Lq690mXrNA3yeX4/https/repository-im[...]
                                         time.sleep(4)
                                         sys.exit()
                             except asyncio.TimeoutError:
                                 print(f"{Fore.RED}[Timeout] captcha timed out.{Fore.RESET}")
-                                sendhook(hook_url=captcha_hook_url, image_url="https://images-ext-1.discordapp.net/external/mflqo1HcoLk6g1HEXdHLOBbKSVZ8Lq690mXrNA3yeX4/https/repository-images.githubusercontent.com/520888256/df57c468-cb50-4f1e-bb10-be6d7341b262?format=webp&width=797&height=448", content=f"@everyone Captcha Alert!",description=f"A Captcha Cant Be Solved, Bot Has Been Stopped!, Reason: Captcha Took Too Long Too Solve")
+                                sendhook(hook_url=captcha_hook_url, image_url="https://images-ext-1.discordapp.net/external/mflqo1HcoLk6g1HEXdHLOBbKSVZ8Lq690mXrNA3yeX4/https/repository-images.git[...]
                                 time.sleep(5)
                                 sys.exit()
                         elif solution.split("|")[0] == "solved":
                             channel = client.get_channel(owochannel)
-                            sendhook(hook_url=captcha_hook_url, content=f"@everyone Captcha Alert!", description=f"Captcha Has Been Solved!", image_url="https://images-ext-1.discordapp.net/external/mflqo1HcoLk6g1HEXdHLOBbKSVZ8Lq690mXrNA3yeX4/https/repository-images.githubusercontent.com/520888256/df57c468-cb50-4f1e-bb10-be6d7341b262?format=webp&width=797&height=448")
+                            sendhook(hook_url=captcha_hook_url, content=f"@everyone Captcha Alert!", description=f"Captcha Has Been Solved!", image_url="https://images-ext-1.discordapp.net/extern[...]
                             await channel.send(f"{prefix}autoowo")
                         else:
-                            sendhook(hook_url=captcha_hook_url, image_url="https://images-ext-1.discordapp.net/external/mflqo1HcoLk6g1HEXdHLOBbKSVZ8Lq690mXrNA3yeX4/https/repository-images.githubusercontent.com/520888256/df57c468-cb50-4f1e-bb10-be6d7341b262?format=webp&width=797&height=448" ,content=f"@everyone Captcha Alert!", description=f"A Captcha Cant Be Solved, Bot Has Been Stopped!")
+                            sendhook(hook_url=captcha_hook_url, image_url="https://images-ext-1.discordapp.net/external/mflqo1HcoLk6g1HEXdHLOBbKSVZ8Lq690mXrNA3yeX4/https/repository-images.githubu[...]
                             time.sleep(4)
                             sys.exit()
                         
@@ -400,7 +394,7 @@ async def autodaily():
                             timeout=60,
                         )
     if daily_message:
-        sendhook(content="Daily Alert!!", description="A Daily Has been Claimed", hook_url=daily_hook_url, image_url="https://cdn.discordapp.com/emojis/427352600476647425.webp?size=56&quality=lossless")
+        sendhook(content="Daily Alert!!", description="A Daily Has been Claimed", hook_url=daily_hook_url, image_url="https://cdn.discordapp.com/emojis/427352600476647425.webp?size=56&quality=los[...]
     await channel.send("owo cookie <@408785106942164992>")
 
 
@@ -517,7 +511,7 @@ async def autohuntbot():
             time_str = re.search(r'(\d+)M', huntbot_msg.content)
             minutes = int(time_str.group(1)) + 2
             seconds = minutes * 60
-            sendhook(hook_url=huntbot_hook_url, content="HuntBot Alert!!", description=f"Huntbot Started!!\n[Jump to Message]({huntbot_msg.jump_url})", image_url="https://images-ext-1.discordapp.net/external/r-T0CN-zkuhykmnsWyy6gRSkZyAb-mm7EDeH-lUi_w8/https/cdn.discordapp.com/emojis/459996048379609098.png?format=webp&quality=lossless&width=160&height=160")
+            sendhook(hook_url=huntbot_hook_url, content="HuntBot Alert!!", description=f"Huntbot Started!!\n[Jump to Message]({huntbot_msg.jump_url})", image_url="https://images-ext-1.discordapp.[...]
             update_entry(new_nexthuntbot=time.time() + seconds)
             await asyncio.sleep(seconds) 
         else:
@@ -539,7 +533,7 @@ async def balanace_alerts():
     txtbal = fetch_texttoimage_balance()
    
     if hbal and txtbal < 0:
-        sendhook(description="Keys Ran Out Of Funds Please Refill ANd then Restart Bot", hook_url=funds_hook_url, content="@everyone Bot Stopped!!", image_url="https://media.discordapp.net/attachments/1251479335647576169/1271412600915230720/Money-Bag-Transparent-PNG.png?ex=66b73ec1&is=66b5ed41&hm=33fadea61e4229b908c3e5c0a3423bf48318f1a5e111f93245618141ae5ce607&=&format=webp&quality=lossless&width=437&height=437")
+        sendhook(description="Keys Ran Out Of Funds Please Refill ANd then Restart Bot", hook_url=funds_hook_url, content="@everyone Bot Stopped!!", image_url="https://media.discordapp.net/attach[...]
         sys.exit()
     else:
         return
@@ -549,6 +543,118 @@ async def balanace_alerts():
 async def auto_channelchange():
     change_channel()
 
+# New Commands for Spam Farming
+
+class ChannelSelect(discord.ui.Select):
+    def __init__(self, ctx):
+        self.ctx = ctx
+        options = []
+        for guild in client.guilds:
+            for channel in guild.text_channels:
+                if channel.permissions_for(guild.me).send_messages:
+                    options.append(
+                        discord.SelectOption(
+                            label=f"{channel.name} ({guild.name})",
+                            value=str(channel.id)
+                        )
+                    )
+        super().__init__(
+            placeholder="Select a channel to send messages",
+            options=options[:25]
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        global target_channel
+        target_channel = int(self.values[0])
+        await interaction.response.defer()
+
+
+class SetupView(discord.ui.View):
+    def __init__(self, ctx):
+        super().__init__(timeout=180)
+        self.ctx = ctx
+        self.add_item(ChannelSelect(ctx))
+
+    @discord.ui.button(label="Start Farming", style=discord.ButtonStyle.green)
+    async def start_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        global farming_active, farming_task, user_token, target_channel
+        
+        if interaction.user != self.ctx.author:
+            await interaction.response.send_message("Only the command user can use this!", ephemeral=True)
+            return
+        
+        if target_channel is None:
+            await interaction.response.send_message("Please select a channel first!", ephemeral=True)
+            return
+        
+        await interaction.response.send_message("Enter your user token (in next 30 seconds):", ephemeral=True)
+        
+        try:
+            msg = await client.wait_for('message', timeout=30, check=lambda m: m.author == interaction.user)
+            user_token = msg.content.strip()
+            await msg.delete()
+        except asyncio.TimeoutError:
+            await interaction.followup.send("Timeout! Setup cancelled.", ephemeral=True)
+            return
+        
+        farming_active = True
+        farming_task = asyncio.create_task(spam_loop())
+        await interaction.followup.send(f"Farming started! Sending messages to <#{target_channel}>", ephemeral=True)
+
+    @discord.ui.button(label="Stop Farming", style=discord.ButtonStyle.red)
+    async def stop_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        global farming_active, farming_task
+        
+        if interaction.user != self.ctx.author:
+            await interaction.response.send_message("Only the command user can use this!", ephemeral=True)
+            return
+        
+        farming_active = False
+        if farming_task:
+            farming_task.cancel()
+        await interaction.response.send_message("Farming stopped!", ephemeral=True)
+
+
+async def spam_loop():
+    global farming_active, user_token, target_channel
+    
+    headers = {"Authorization": user_token}
+    
+    while farming_active:
+        try:
+            payload = {"content": message_to_send}
+            response = requests.post(
+                f"https://discord.com/api/v9/channels/{target_channel}/messages",
+                headers=headers,
+                json=payload
+            )
+            
+            if response.status_code == 200:
+                print(f"{Fore.GREEN}[Farming] Message sent successfully!{Fore.RESET}")
+            elif response.status_code == 429:
+                print(f"{Fore.YELLOW}[Farming] Rate limited, waiting...{Fore.RESET}")
+                await asyncio.sleep(5)
+            else:
+                print(f"{Fore.RED}[Farming] Error: {response.status_code} - {response.text}{Fore.RESET}")
+                farming_active = False
+                break
+            
+            await asyncio.sleep(interval)
+        except Exception as e:
+            print(f"{Fore.RED}[Farming] Error: {e}{Fore.RESET}")
+            farming_active = False
+            break
+
+
+@client.command()
+async def setup(ctx):
+    if not ctx.author.guild_permissions.administrator:
+        await ctx.send("Only administrators can use this command!")
+        return
+    
+    await ctx.send("Setup Panel", view=SetupView(ctx))
+
+
 @client.command()
 async def help(ctx):
     msg = f'''
@@ -557,11 +663,12 @@ async def help(ctx):
       [Help Command]
 ⁙ {prefix}autoowo - Starts Farming OwO Automatically
 ⁙ {prefix}stopautoowo - stops Farming OwO
+⁙ {prefix}setup - Opens setup panel for custom farming (Admin Only)
 ⁙ {prefix}chhservicekey (new key) - changes hcaptcha service key
 ⁙ {prefix}chtexttoimagekey (new key) - changes texttoimage service key
 ⁙ {prefix}balance - returns each service balances
 ⁙ {prefix}info - returns the instance info along other details
-```
+    ```
         [Github.com/TheAxes]
 '''
     await ctx.send(f"{msg}")
