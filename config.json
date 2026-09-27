@@ -6,13 +6,13 @@
       1253727886800588820,
       1270754511362850817
     ],
-    "owodm_channelid": enter owo_dm channel id,
-      "channel_change_interval": [5, 15],
-      "animal_types": "all",
-      "slotamount": ["100", "500", "200"],
-      "autocoinflip_amount": ["100", "500", "200"],
-      "random_commands": ["zoo", "ping", "pic animal_cat", "xp"]
-    },
+    "owodm_channelid": 1253727886800588820,
+    "channel_change_interval": [5, 15],
+    "animal_types": "all",
+    "slotamount": ["100", "500", "200"],
+    "autocoinflip_amount": ["100", "500", "200"],
+    "random_commands": ["zoo", "ping", "pic animal_cat", "xp"]
+  },
   "plugins": {
     "autosell": "true",
     "autolevelup": "true",
@@ -31,10 +31,10 @@
     "TextToImage_key": "texttoimage_key",
     "huntbot_key": "join discord to get its free dumb"
   },
-"notifications": {
-  "captcha_alerts": "webhook_url",
-  "daily_claim_alerts": "webhook_url",
-  "huntbot_alert": "webhook_url",
-  "funds_alerts": "webhook_url"
-}
+  "notifications": {
+    "captcha_alerts": "webhook_url",
+    "daily_claim_alerts": "webhook_url",
+    "huntbot_alert": "webhook_url",
+    "funds_alerts": "webhook_url"
+  }
 }
